@@ -27,3 +27,54 @@ const { animations, easings } = Base
 
 export { AnimateOnChange, HideUntilLoaded, animations, easings }
 
+// ---
+
+function setToString( set ) {
+    return Array.from(set.values()).reduce( ( s, v ) => s += v, '' )
+}
+
+import React from 'react'
+//import PropTypes from 'prop-types'
+import StyleContext from 'isomorphic-style-loader/StyleContext'
+
+function IsomorphicCSSWrapper( Component, ...styles ) {
+
+    const ComponentWithStyles = withStyles.apply( this, styles )( Component )
+
+    class CSSWrapper extends React.Component {
+
+        getStyleContext() {
+            const { props: { css } } = this
+            const insertCss = (...styles) => styles.forEach(style => css.add(style._getCss()))
+            return { insertCss }
+        }
+
+        render() {
+            const { props } = this
+            const { css } = props
+            return (
+                <StyleContext.Provider value={this.getStyleContext()}>
+                    <Component {...props} />
+                    <style
+                        className="_isl-styles"
+                        dangerouslySetInnerHTML={{ __html: setToString(css) }}
+                    />
+                </StyleContext.Provider>
+            )
+        }
+    }
+
+    CSSWrapper.defaultProps = {
+        css: new Set()
+    }
+/*
+    CSSWrapper.childContextTypes = {
+        insertCss: PropTypes.func
+    }
+*/  
+    CSSWrapper.displayName = `(${Component.displayName||Component.name||'Anonymous'}CSSWrapper)`
+
+    return CSSWrapper 
+}
+
+export { IsomorphicCSSWrapper }

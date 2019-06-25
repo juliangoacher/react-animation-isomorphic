@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-export { default as AnimateOnChange } from './AnimateOnChange'
-export { default as HideUntilLoaded } from './HideUntilLoaded'
-export { default as AnimateGroup } from './AnimateGroup'
-export { animations } from './theme'
-export { easings } from './theme'
+const { configure } = require('enzyme')
+const Adapter = require('enzyme-adapter-react-16')
+
+configure({ adapter: new Adapter() })
