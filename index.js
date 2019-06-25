@@ -34,7 +34,6 @@ function setToString( set ) {
 }
 
 import React from 'react'
-//import PropTypes from 'prop-types'
 import StyleContext from 'isomorphic-style-loader/StyleContext'
 
 function IsomorphicCSSWrapper( Component, ...styles ) {
@@ -54,7 +53,7 @@ function IsomorphicCSSWrapper( Component, ...styles ) {
             const { css } = props
             return (
                 <StyleContext.Provider value={this.getStyleContext()}>
-                    <Component {...props} />
+                    <ComponentWithStyles {...props} />
                     <style
                         className="_isl-styles"
                         dangerouslySetInnerHTML={{ __html: setToString(css) }}
@@ -67,11 +66,7 @@ function IsomorphicCSSWrapper( Component, ...styles ) {
     CSSWrapper.defaultProps = {
         css: new Set()
     }
-/*
-    CSSWrapper.childContextTypes = {
-        insertCss: PropTypes.func
-    }
-*/  
+
     CSSWrapper.displayName = `(${Component.displayName||Component.name||'Anonymous'}CSSWrapper)`
 
     return CSSWrapper 
